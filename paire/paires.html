@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Jeu des paires</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="assets/style.css" rel="stylesheet">
+        <link rel="SHORTCUT ICON" href="../assets/css/images/MyIconx16.ico"/>
+    </head>
+    <body>
+        <h1>Le jeu des paires</h1>
+            <div id="reset">
+                <p>Il vous reste <span id="time">60</span> secondes avant relancement du jeu.</p>
+            </div>
+            <div id="gridcards">  
+            </div>
+    </body>
+    <script>
+        let score = 0;
+        let timer = 60; 
+        let dos = "assets/dos2.jpg";
+        let check = null;
+        let checkindex = 0;
+        let cartetab = ["assets/anehihan-1.jpg","assets/chatminou-1.jpg","assets/chientoutou-1.jpg","assets/lamacrachat-1.jpg","assets/lapinscrottes-1.jpg","assets/lionnegraou-1.jpg","assets/oursbaby-1.jpg","assets/anehihan-2.jpg","assets/chatminou-2.jpg","assets/chientoutou-2.jpg","assets/lamacrachat-2.jpg","assets/lapinscrottes-2.jpg","assets/lionnegraou-2.jpg","assets/oursbaby-2.jpg"];
+        let slotstab = [];
+        //fonction mélangeant les données afin d'avoir un résultat aléatoire
+        function Shuffle(o) {
+            for(let j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+            return o;
+        };
+        //fonction de comparaison des cartes
+        function Compare(carte1, carte2){
+            carte1 = carte1.split("-");
+            carte2 = carte2.split("-");
+            console.log(carte1, carte2);
+            return carte1[0] == carte2[0];
+        }
+        //fontion de distribution aléatoire et comparaison des cartes
+        Shuffle(cartetab);   
+        for(let i=0; i<cartetab.length; i++){
+            let div = document.getElementById('gridcards');
+            let slots = document.createElement('button');  
+            let img = slots.appendChild="<img class='image' src='";
+            let imgf = "'>";
+            let cacher = slots.innerHTML=img+dos+imgf;
+            slotstab.push(slots);
+            div.appendChild(slots);
+            slots.addEventListener("click", function(event){
+                slots.innerHTML=img+cartetab[i]+imgf;
+                if(check == null){
+                    check = cartetab[i];
+                    checkindex = i;
+                }else if(check != null){
+                    if(Compare(check, cartetab[i])){
+                        score+=1;
+                        if(score == 7){
+                            confirm("Vous avez gagner");
+                            location.reload();
+                        }
+                    }else{
+                        alert("Les deux cartes sont différente");
+                        slotstab[checkindex].innerHTML=img+dos+imgf;
+                        slotstab[i].innerHTML=img+dos+imgf;
+                    }
+                    check = null;
+                }
+            }, false); 
+        };
+        //fonction de vérification finale
+        setTimeout(function(){
+            if(score == 7){
+                confirm("Vous avez gagner");
+                location.reload();
+            } else if ( score < 7){
+                confirm("vous avez perdu");
+                location.reload();
+            }
+        },60000);
+        //fonction timer du jeu
+        setInterval(function(){
+            timer-=1
+            document.getElementById("time").innerHTML=timer;
+        },1000)
+    </script>
+</html>
